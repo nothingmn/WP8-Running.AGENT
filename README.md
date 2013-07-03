@@ -1,5 +1,5 @@
-Agent.Menu
-==========
+WP8-Running.AGENT
+=================
 
 A WP8 based application for tracking walks and runs, with support for the AGENT SmartWatch
 
