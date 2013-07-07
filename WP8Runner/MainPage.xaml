@@ -64,11 +64,15 @@
           <TextBlock Text="00:00" Grid.Column="3" x:Name="paceLabel"
                 HorizontalAlignment="Center" Grid.Row="1"/>
 
-          <Button Content="Start"
-                  Grid.Row="2" Grid.ColumnSpan="4"
+                    <Button Content="Connect"
+                  Grid.Row="2" Grid.ColumnSpan="2"
+                  Click="ConnectButton_Click"
+                  x:Name="ConnectButton"/>
+                    <Button Content="Start"
+                  Grid.Row="2" Grid.Column="2"  Grid.ColumnSpan="2"
                   Click="StartButton_Click"
                   x:Name="StartButton"/>
-        </Grid>
+                </Grid>
       </Grid>
     </Grid>
   </Grid>
