@@ -35,6 +35,7 @@ namespace WP8Runner
             _line.StrokeThickness = 5;
             Map.MapElements.Add(_line);
 
+            _startTime = System.Environment.TickCount;
 
             _watcher.PositionChanged += Watcher_PositionChanged;
             _watcher.Start();
@@ -50,27 +51,62 @@ namespace WP8Runner
             timeLabel.Text = _time;
         }
 
-        private void StartButton_Click(object sender, RoutedEventArgs e)
+        private void Reset(bool ClearData)
         {
 
-            if (_timer.IsEnabled)
+            if (_started)
             {
                 _started = false;
                 _timer.Stop();
-                StartButton.Content = "Start";
+                _watcher.Stop();
             }
             else
             {
                 _started = true;
-                if (_line.Path.Count > 0)
+                if (_line.Path.Count > 0 && ClearData)
                 {
+                    _startTime = System.Environment.TickCount;
                     _line.Path.Clear();
                     Map.UpdateLayout();
                 }
 
                 _timer.Start();
-                _startTime = System.Environment.TickCount;
+                _watcher.Start();
+            }
+            
+            SendStartStop(_started);
+        }
+
+        private void Resume_Click(object sender, RoutedEventArgs e)
+        {
+
+            Reset(false);
+
+            if (_started)
+            {
                 StartButton.Content = "Stop";
+                ResumeButton.Content = "Pause";
+            }
+            else
+            {
+                StartButton.Content = "Start";
+                ResumeButton.Content = "Resume";
+            }
+        }
+
+        private void StartButton_Click(object sender, RoutedEventArgs e)
+        {
+            Reset(true);
+
+            if (_started)
+            {
+                StartButton.Content = "Stop";
+                ResumeButton.Content = "Pause";
+            }
+            else
+            {
+                StartButton.Content = "Start";
+                ResumeButton.Content = "Resume";
             }
         }
 
@@ -81,6 +117,25 @@ namespace WP8Runner
 
         private StreamSocket _socket = null;
         private DataWriter _dataWriter = null;
+        private DataReader _dataReader = null;
+
+        private async void ReadData()
+        {
+            while (true)
+            {
+                await _dataReader.LoadAsync(4);
+                string data = string.Empty;
+
+                while (_dataReader.UnconsumedBufferLength > 0)
+                {
+                    data += _dataReader.ReadString(_dataReader.UnconsumedBufferLength);
+                }
+                if(data == "P") Resume_Click(null, null);
+                if(data == "S") StartButton_Click(null, null);
+                Debug.WriteLine("READ DATA:" + data);
+            }
+        }
+        
 
         private async Task<bool> SetupDeviceConn()
         {
@@ -105,13 +160,16 @@ namespace WP8Runner
             }
 
             _socket = new StreamSocket();
-
+            
             //"{00001101-0000-1000-8000-00805f9b34fb}" - is the GUID for the serial port service.
             await _socket.ConnectAsync(peerInfo.HostName, "{00001101-0000-1000-8000-00805f9b34fb}");
 
             _dataWriter = new DataWriter(_socket.OutputStream);
+            _dataReader = new DataReader(_socket.InputStream);
+            _dataReader.InputStreamOptions = InputStreamOptions.Partial;
 
-            
+            ReadData();
+
             return true;
         }
 
@@ -166,29 +224,42 @@ namespace WP8Runner
 
         private async void SendPosition(GeoCoordinate coord)
         {
-            if (_connected && _started)
+            if (_started)
             {
                 string payload = string.Format("Data,{0},{1},{2},{3},{4},{5},{6},{7},{8},{9},{10}", coord.Altitude,
                                                coord.Course, coord.HorizontalAccuracy,
                                                coord.Latitude, coord.Longitude, coord.Speed, coord.VerticalAccuracy,
                                                _pace, _distance, _calories, _time);
-                Debug.WriteLine("SENDING PAYLOAD" + payload);
-                _dataWriter.WriteString( payload + '\0');
-                
-                await _dataWriter.StoreAsync();
+                 SendData(payload);
             }
         }
 
-        private async void SendHello()
+        private async void SendStartStop(bool started)
+        {
+            var coord = Map.Center;
+            if (_line.Path.Count > 0) coord = _line.Path.Last();
+            
+            string payload = string.Format("{11},{0},{1},{2},{3},{4},{5},{6},{7},{8},{9},{10}", coord.Altitude,
+                                           coord.Course, coord.HorizontalAccuracy,
+                                           coord.Latitude, coord.Longitude, coord.Speed, coord.VerticalAccuracy,
+                                           _pace, _distance, _calories, _time, (started ? "Start" : "Stop"));
+            SendData(payload);
+        }
+
+        private async void SendData(string payload)
         {
             if (_connected)
             {
-                string payload = string.Format("Hello");
                 Debug.WriteLine("SENDING PAYLOAD" + payload);
                 _dataWriter.WriteString(payload + '\0');
 
                 await _dataWriter.StoreAsync();
             }
+            
+        }
+        private async void SendHello()
+        {
+            SendData("Hello");
         }
 
         private string _pace = "00:00";
@@ -210,5 +281,6 @@ namespace WP8Runner
         {
             ConnectToAgent();
         }
+
     }
 }

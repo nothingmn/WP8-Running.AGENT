@@ -9,14 +9,15 @@ namespace AgentWatchApplication1
         public override object Read(System.IO.Ports.SerialPort port)
         {
             var c = new Coordinate();
-            c.HasData = false;
+            c.Action = Action.Hello;
+            
             var csv = new CSVChannel();
             string raw = (csv.Read(port) as string);
             string[] parts = raw.Split(',');
             double val = 0;
-            if (parts[0] == "Data")
+            var action = parts[0];
+            if (action == "Data" || action == "Start" || action == "Stop")
             {
-                c.HasData = true;
                 if (parts[1] != "NaN" && double.TryParse(parts[1], out val)) c.Altitude = val;
                 if (parts[2] != "NaN" && double.TryParse(parts[2], out val)) c.Course = val;
                 if (parts[3] != "NaN" && double.TryParse(parts[3], out val)) c.HorizontalAccuracy = val;
@@ -29,7 +30,24 @@ namespace AgentWatchApplication1
                 c.Distance = parts[9];
                 c.Calories = parts[10];
                 c.Time = parts[11];
-            } 
+
+                if (action == "Start")
+                {
+                    c.Action = Action.Start;
+                }
+                else if (action == "Stop")
+                {
+                    c.Action = Action.Stop;
+                } else if (action == "Data")
+                {
+                    c.Action = Action.Data;
+                }
+            }
+            else if (action == "Hello")
+            {
+                c.Action = Action.Hello;
+            }
+            
             return c;
         }
     }

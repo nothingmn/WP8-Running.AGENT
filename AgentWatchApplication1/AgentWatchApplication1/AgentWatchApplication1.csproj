@@ -32,6 +32,16 @@
   </PropertyGroup>
   <Import Project="$(NetMfTargetsBaseDir)$(TargetFrameworkVersion)\CSharp.Targets" />
   <ItemGroup>
+    <Compile Include="Contrib\AGENT.cs" />
+    <Compile Include="Contrib\ButtonDirection.cs" />
+    <Compile Include="Contrib\ButtonHelper.cs" />
+    <Compile Include="Contrib\Buttons.cs" />
+    <Compile Include="Contrib\Drawing.cs" />
+    <Compile Include="Contrib\HAlign.cs" />
+    <Compile Include="Contrib\Point.cs" />
+    <Compile Include="Contrib\PolyFill.cs" />
+    <Compile Include="Contrib\Size.cs" />
+    <Compile Include="Contrib\VAlign.cs" />
     <Compile Include="Coordinate.cs" />
     <Compile Include="CoordinateChannel.cs" />
     <Compile Include="Hardware\Bluetooth\BaseChannel.cs" />
@@ -59,7 +69,6 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\NinaB.tinyfnt" />
-    <None Include="Resources\small.tinyfnt" />
+    <None Include="Resources\SegoeUIPaceFont.tinyfnt" />
   </ItemGroup>
 </Project>

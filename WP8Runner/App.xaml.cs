@@ -33,6 +33,9 @@ namespace WP8Runner
 
             // Language display initialization
             InitializeLanguage();
+            
+            //Allow us to run under the lock screen
+            PhoneApplicationService.Current.ApplicationIdleDetectionMode = IdleDetectionMode.Disabled;
 
             // Show graphics profiling information while debugging.
             if (Debugger.IsAttached)

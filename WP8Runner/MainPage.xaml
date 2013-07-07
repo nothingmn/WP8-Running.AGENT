@@ -15,66 +15,70 @@
     SupportedOrientations="Portrait" Orientation="Portrait"
     shell:SystemTray.IsVisible="True">
 
-  <Grid util:GridUtils.RowDefinitions="Auto, *">
+    <Grid util:GridUtils.RowDefinitions="Auto, *">
 
-    <!-- title -->
-    <StackPanel Grid.Row="0" Margin="12,17,0,28">
-      <StackPanel Orientation="Horizontal">
-        <Image Source="/Assets/ApplicationIconLarge.png" Height="50"/>
-        <TextBlock Text="WP8Runner" VerticalAlignment="Center"
+        <!-- title -->
+        <StackPanel Grid.Row="0" Margin="12,17,0,28">
+            <StackPanel Orientation="Horizontal">
+                <Image Source="/Assets/ApplicationIconLarge.png" Height="50"/>
+                <TextBlock Text="WP8 Runner (AGENT)" VerticalAlignment="Center"
                     Margin="10 0 0 0"
                     FontSize="{StaticResource PhoneFontSizeLarge}"/>
-      </StackPanel>
-    </StackPanel>
+            </StackPanel>
+        </StackPanel>
 
-    <!--ContentPanel - place additional content here-->
-    <Grid x:Name="ContentPanel" Grid.Row="1" Margin="12,0,12,0">
+        <!--ContentPanel - place additional content here-->
+        <Grid x:Name="ContentPanel" Grid.Row="1" Margin="12,0,12,0">
 
-      <!-- the map -->
-      <maps:Map x:Name="Map"
+            <!-- the map -->
+            <maps:Map x:Name="Map"
             PedestrianFeaturesEnabled="True"
             LandmarksEnabled="True"
             Pitch="55"
             ZoomLevel="18"/>
 
-      <!-- run statistics -->
-      <Grid Background="#99000000" Margin="20" 
+            <!-- run statistics -->
+            <Grid Background="#99000000" Margin="10" 
             VerticalAlignment="Bottom">
-        <Grid Margin="20"
-              util:GridUtils.RowDefinitions="40, 40, Auto"
-              util:GridUtils.ColumnDefinitions="*, *, *, *">
-          
-          <!-- distance -->
-          <TextBlock Text="Distance:"/>
-          <TextBlock Text="0 km" Grid.Column="1" x:Name="distanceLabel"
+                <Grid Margin="5"
+              util:GridUtils.RowDefinitions="30, 30, Auto"
+              util:GridUtils.ColumnDefinitions="100, 100, 110, 129">
+
+                    <!-- distance -->
+                    <TextBlock Text="Distance:"/>
+                    <TextBlock Text="0 km" Grid.Column="1" x:Name="distanceLabel"
                 HorizontalAlignment="Center"/>
 
-          <!-- time -->
-          <TextBlock Text="Time:" Grid.Column="2"/>
-          <TextBlock Text="00:00:00" Grid.Column="3" x:Name="timeLabel"
+                    <!-- time -->
+                    <TextBlock Text="Time:" Grid.Column="2"/>
+                    <TextBlock Text="00:00:00" Grid.Column="3" x:Name="timeLabel"
                 HorizontalAlignment="Center"/>
 
-          <!-- calories -->
-          <TextBlock Text="Calories:" Grid.Row="1"/>
-          <TextBlock Text="0" Grid.Column="1" x:Name="caloriesLabel"
+                    <!-- calories -->
+                    <TextBlock Text="Calories:" Grid.Row="1"/>
+                    <TextBlock Text="0" Grid.Column="1" x:Name="caloriesLabel"
                 HorizontalAlignment="Center" Grid.Row="1"/>
 
-          <!-- pace -->
-          <TextBlock Text="Pace:" Grid.Column="2" Grid.Row="1"/>
-          <TextBlock Text="00:00" Grid.Column="3" x:Name="paceLabel"
+                    <!-- pace -->
+                    <TextBlock Text="Pace:" Grid.Column="2" Grid.Row="1"/>
+                    <TextBlock Text="00:00" Grid.Column="3" x:Name="paceLabel"
                 HorizontalAlignment="Center" Grid.Row="1"/>
 
                     <Button Content="Connect"
-                  Grid.Row="2" Grid.ColumnSpan="2"
-                  Click="ConnectButton_Click"
-                  x:Name="ConnectButton"/>
+                      Grid.Row="2" Grid.ColumnSpan="2"
+                      Click="ConnectButton_Click"
+                      x:Name="ConnectButton"/>
                     <Button Content="Start"
-                  Grid.Row="2" Grid.Column="2"  Grid.ColumnSpan="2"
-                  Click="StartButton_Click"
-                  x:Name="StartButton"/>
+                      Grid.Row="2" Grid.Column="2"  Grid.ColumnSpan="1"
+                      Click="StartButton_Click"
+                      x:Name="StartButton"/>
+                  <Button Content="Resume"
+                      Grid.Row="2" Grid.Column="3"  Grid.ColumnSpan="1"
+                      Click="Resume_Click"
+                      x:Name="ResumeButton"/>
                 </Grid>
-      </Grid>
+            </Grid>
+        </Grid>
     </Grid>
-  </Grid>
 
 </phone:PhoneApplicationPage>

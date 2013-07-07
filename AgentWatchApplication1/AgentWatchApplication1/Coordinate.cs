@@ -3,6 +3,7 @@ using Microsoft.SPOT;
 
 namespace AgentWatchApplication1
 {
+    public enum Action {Hello, Start, Stop, Data}
     public class Coordinate
     {
         public double Altitude { get; set; }
@@ -18,6 +19,6 @@ namespace AgentWatchApplication1
         public string Calories { get; set; }
         public string Time { get; set; }
 
-        public bool HasData { get; set; }
+        public Action Action { get; set; }
     }
 }

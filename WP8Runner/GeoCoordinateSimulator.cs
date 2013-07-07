@@ -187,7 +187,7 @@ namespace GpsSimulator
             get { return m_Position; }
             private set
             {
-                if (m_Position != value)
+                if (m_Position != value && value !=null)
                 {
                     m_Position = value;
                     if (PositionChanged != null)
